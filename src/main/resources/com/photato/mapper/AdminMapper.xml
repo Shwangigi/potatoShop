@@ -12,14 +12,16 @@
   
   <select id="getMemberList" resultType="com.photato.domain.MemberVO">  
   <![CDATA[
-     select * from member where id = #{id}
+         SELECT *
+    FROM member
+    WHERE id = #{id}
   ]]>
   </select> <!-- 회원 정보 검색 -->
   
   <update id="updateBlack">
    <![CDATA[
       update member set
-      grade = 4 ,
+      grade = #{grade},
       update_date = sysdate
       where id = #{id}
     ]]>
@@ -48,7 +50,21 @@
   
   <select id="readReport" resultType="com.photato.domain.ReportVO">
   <![CDATA[
-     select * from reports 
+     select 
+     r.report_number, 
+      r.writer_id, 
+      w.name AS writer_name, 
+      r.defendant, 
+      d.name AS defendant_name, 
+      r.status, 
+      r.regidate, 
+      r.done_date
+    FROM 
+      reports r
+    JOIN 
+      member w ON r.writer_id = w.id  -- 신고자의 이름을 가져오기 위해 member 테이블 조인
+    LEFT JOIN 
+      member d ON r.defendant = d.member_number  -- 신고 당한 사람의 이름을 가져오기 위해 member 테이블 조인ㄴ
   ]]>
   </select> <!-- 신고내역 확인(완) -->
   
@@ -56,13 +72,13 @@
   <![CDATA[
      update reports
      set
-     status = #{status},
+     status = 4,
      done_date = sysdate
      where id = #{id}
   ]]>
   </update> <!-- 신고처리 -->
   
-   <select id="viewBlack">
+   <select id="viewBlack" resultType="com.photato.domain.MemberVO">
     <![CDATA[
        select member_number, id, update_date from member where grade=4
    ]]>

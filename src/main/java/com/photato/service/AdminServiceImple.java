@@ -34,10 +34,10 @@ public class AdminServiceImple implements AdminService{
 	}
 
 	@Override // 블랙리스트 등록
-	public void updateBlack(String id) {
+	public void updateBlack(MemberVO member) {
 		
-		log.info("블랙리스트 아이디 :" + id);
-		mapper.updateBlack(id);
+		log.info("블랙리스트 아이디 :" + member);
+		mapper.updateBlack(member);
 	}
 
 	@Override // 공지 추가

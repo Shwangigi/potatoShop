@@ -15,7 +15,7 @@ public interface AdminMapper { // 관리자
 	
 	public MemberVO getMemberList(@Param("id") String id); // 회원 정보 검색 - 완
 	
-	public int updateBlack(@Param("id") String id ); // 블랙리스트 - 완
+	public int updateBlack(MemberVO member); // 블랙리스트 - 완
 	
 	public int insertBoard(BoardVO boardVO); // 공지 추가 - 완
 	

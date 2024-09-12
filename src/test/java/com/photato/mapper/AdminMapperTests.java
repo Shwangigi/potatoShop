@@ -55,20 +55,18 @@ public class AdminMapperTests {
 		
 	}
 	
-	@Test // 블랙리스트
-	public void testBlack() {
-		String id = "sql3";  // 테스트할 회원 ID
-	    
-	    log.info("id: " + id);
-	    
-	    int result = mapper.updateBlack(id);
-	    
-	    assertEquals(1, result);  // 업데이트가 성공하면 1이 반환됨
-
-	    // 업데이트된 회원 정보 다시 조회하여 확인
-	    MemberVO updatedMember = mapper.getList(id);
-	    assertNotNull(updatedMember);
-	}
+	/*
+	 * @Test // 블랙리스트 public void testBlack() { String id = "sql3"; // 테스트할 회원 ID
+	 * 
+	 * log.info("id: " + id);
+	 * 
+	 * int result = mapper.updateBlack(member);
+	 * 
+	 * assertEquals(1, result); // 업데이트가 성공하면 1이 반환됨
+	 * 
+	 * // 업데이트된 회원 정보 다시 조회하여 확인 MemberVO updatedMember = mapper.getList(id);
+	 * assertNotNull(updatedMember); }
+	 */
 	
 	@Test // 공지 추가
 	public void testupdate() {

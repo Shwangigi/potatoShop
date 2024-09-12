@@ -17,7 +17,7 @@ public interface AdminService {
     public MemberVO getMemberList(String id);
 
     // 블랙리스트 등록
-    public void updateBlack(String id);
+    public void updateBlack(MemberVO member);
 
     // 공지사항 추가
     public void insertBoard(BoardVO board);

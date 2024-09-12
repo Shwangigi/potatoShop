@@ -5,7 +5,7 @@ create table member(
    name varchar2(30) not null, -- 이름
    nickName varchar2(30) not null, -- 닉네임
    phone varchar2(30) not null, -- 전화번호
-   adress varchar2(100) not null, -- 주소
+   address varchar2(100) not null, -- 주소
    grade number(1) not null, -- 회원등급
    profile_image varchar2(1000) not null, -- 프로필
    regidate date default sysdate, -- 회원가입일  
