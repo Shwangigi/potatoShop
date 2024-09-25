@@ -1,59 +1,76 @@
 create table member(
-   member_number varchar2(100) constraint pk_member_num primary key, -- 회원번호
+   member_number varchar2(50) constraint member_number_pk primary key, -- 회원번호
    id varchar2(30) not null unique,  -- 아이디
    pass varchar2(30) not null, -- 비밀번호
    name varchar2(30) not null, -- 이름
    nickName varchar2(30) not null, -- 닉네임
    phone varchar2(30) not null, -- 전화번호
-   address varchar2(100) not null, -- 주소
-   grade number(1) not null, -- 회원등급
+   address varchar2(50) not null, -- 주소
+   grade number(1) default 0 not null, -- 회원등급
    profile_image varchar2(1000) not null, -- 프로필
    regidate date default sysdate, -- 회원가입일  
    update_date date default sysdate -- 회원수정일
 ); -- 멤버 테이블
 
 select * from member;
-SELECT * FROM member WHERE id = 'sql3';
+
+insert into member values('admin','admin','1234','관리자','관리자','01012341234','주소',1,'default_profile_1.jpg',sysdate,sysdate);
+delete from member where id='admin';
+insert into member values('guest','guest1','1111','손님1','손님1','01012351235','주소1',0,'default_profile_2.jpg',sysdate,sysdate);
+insert into member values('guest2','guest2','2222','손님2','손님2','01012361236','주소2',4,'default_profile_3.jpg',sysdate,sysdate);
+insert into member values('guest3','guest3','3333','손님3','손님3','01012371237','주소3',4,'default_profile_4.jpg',sysdate,sysdate);
 
 CREATE TABLE user_table (
-  user_number VARCHAR2(100), -- 회원번호 member_number외래키
-  likes NUMBER NOT NULL, -- 좋아요 수
-  reports NUMBER NOT NULL, -- 신고 수
-  temper NUMBER NOT NULL, -- 온도
-  trades NUMBER NOT NULL, -- 거래완료 수
-  CONSTRAINT fk_user_member_num FOREIGN KEY (user_number) REFERENCES member(member_number)
+  user_number VARCHAR2(50) primary key, -- 회원번호 member_number외래키
+  reports NUMBER default 0 NOT NULL, -- 신고 수
+  temper NUMBER default 36.5 NOT NULL, -- 온도
+  trades NUMBER default 0 NOT NULL-- 거래완료 수
 ); -- user 테이블
+
+
 
 create table reports(
    report_number varchar2(1000) constraint pk_report_num primary key, -- 신고번호
    writer_id varchar2(30) not null, -- 신고자 (member_id)
-   defendant varchar2(100), -- 신고 당한사람 fk(member_number)
-   status number(1) not null, -- 신고처리 상태
+   defendant_id varchar2(30), -- 신고 당한사람 id
+   defendant varchar2(30), -- 신고 당한사람 fk(member_number)
+   status number(1) default 0 not null, -- 신고처리 상태
+   content varchar2(2000) not null,   -- 신고내용
    regidate date default sysdate, -- 신고일
-   done_date date default sysdate, -- 신고처리일
-   constraint fk_report_defendant_number foreign key(defendant) references member(member_number)
+   done_date date default sysdate -- 신고처리일
 ); -- 신고 테이블
 
-select * from reports;
+insert into reports values(seq_board.nextval,'guest1','eee','01J84ETE3XW5CKS9PAMM7Z8TTT ',0, '이사람은 쓰레기입니다.',sysdate,sysdate);
+
 
 create table board(
-   board_number varchar2(1000) constraint pk_board_num primary key, -- 글 번호
-   types varchar2(100) not null, -- 게시판 구분
+   board_number varchar2(50) constraint pk_board_num primary key, -- 글 번호
+   types varchar2(50) not null, -- 게시판 구분
    title varchar2(100) not null, -- 글 제목
    content varchar2(1000) not null, -- 글 내용
    writer varchar2(30) not null, -- 작성자 
    writer_number varchar(50) , -- 작성자 번호 fk(member_number)
    status varchar2(1000) not null, -- 상품의 상태
    photo_name varchar2(1000) , -- 첨부사진
-   regidate date default sysdate, -- 등록일/   수정일 필요하면 추가해주세욤
-   constraint fk_board_writer_number foreign key(writer_number) references member(member_number)
+   regidate date default sysdate, -- 등록일
+   updatedate date default sysdate,
+   likes number default 0 not null,
+   interest number default 0 not null,
+   price number not null,
+   views number default 0 not null
 ); -- 게시판
 
-alter table board rename column photoname to photo_name;
+insert into board (board_number, types, title, content, writer, writer_number, status, photo_name, price, likes, interest, views)
+   values (seq_board.nextval, '옷', '테스트용 제목1', '테스트용 내용1', '깅태희', '01J84ETE3XW5CKS9PAMM7Z8TTT', '판매중', 'p5.png', 150000, 42, 6, 325);
+insert into board (board_number, types, title, content, writer, writer_number, status, photo_name, price,likes, interest, views)
+   values (seq_board.nextval, '전자기기', '테스트용 제목2', '테스트용 내용2', '깅태희', '01J84ETE3XW5CKS9PAMM7Z8TTT','판매중', 'gifts.png', 100000, 9, 2, 45);
+insert into board (board_number, types, title, content, writer, writer_number, status, photo_name, price,likes, interest, views)
+   values (seq_board.nextval, '생활용품', '테스트용 제목3', '테스트용 내용3', '깅태희', '01J84ETE3XW5CKS9PAMM7Z8TTT','예약중', 'p3.png', 40000, 0, 0, 10);
+insert into board (board_number, types, title, content, writer, writer_number, status, photo_name, price,likes, interest, views)
+   values (seq_board.nextval, '전자기기', '테스트용 제목4', '테스트용 내용4', '깅태희', '01J84ETE3XW5CKS9PAMM7Z8TTT','판매완료', 'p1.png', 80000, 5, 1, 20);
+insert into board (board_number, types, title, content, writer, writer_number, status, photo_name, price,likes, interest, views)
+   values (seq_board.nextval, '옷', '테스트용 제목5', '테스트용 내용5', '깅태희', '01J84ETE3XW5CKS9PAMM7Z8TTT','판매완료', 'p7.png', 50000, 2, 0, 12);
 
-select * from member;
-select * from board;
-select * from reports;
 
 create sequence seq_board;
 
@@ -62,8 +79,7 @@ create table reply(
    board_number varchar2(100), -- 글 번호 fk board_number
    content varchar2(1000) not null, -- 댓글 내용
    writer varchar2(30) not null, -- 작성자(member.nickname) 자바에서 연결
-   regidate date default sysdate, -- 등록일
-   constraint fk_reply_board_number foreign key(board_number) references board(board_number)
+   regidate date default sysdate -- 등록일
 ); -- 댓글
 
 create table re_reply(
@@ -76,20 +92,76 @@ create table re_reply(
 ); -- 대댓글
 
 create table chat(
-   chat_number varchar2(1000) constraint pk_chat_num primary key, -- 채팅번호
-   sender varchar2(100) not null, -- 보낸사람
-   reciever varchar2(100) not null, -- 받는 사람 
-   content varchar2(1000) not null, -- 내용
+   chat_number varchar2(100) not null, -- 채팅방 번호
+   sender varchar2(100) not null,  -- 보낸사람(member_number)
+   content varchar2(2000) not null, -- 채팅 내용
    time_stamp date default sysdate  -- 보낸시간
 );
 
+create table chat_room(
+chat_number varchar2(100) primary key,
+person_a varchar2(100) not null,
+person_b varchar2(100) not null
+);
 
-insert into reports(report_number, writer_id, defendant, status) values(seq_board.nextval,'qqq', '01J6TP08EPYFFXJYAAMJ9KV2QW' ,0);
-insert into reports(report_number, writer_id, defendant, status) values(seq_board.nextval,'twrt', 'B1DDC50458AF4A179FE27CA0857B8E8A' ,1);
-insert into reports(report_number, writer_id, defendant, status) values(seq_board.nextval,'sql5', '9A3897B0C5C643B3A7DF98EB5697C3F3' ,4);
+create table notification(
+ writer varchar2(30) not null, -- 작성자 
+ title varchar2(100) not null, -- 글 제목
+ content varchar2(1000) not null, -- 글 내용
+ regidate date default sysdate -- 등록일
+);
 
-UPDATE reports
-SET status = 0,
-    regidate = SYSDATE,
-    done_date = SYSDATE
-WHERE status = 1;
+insert into notification values('admin','감자마켓 v1.0.2업데이트.','감자마켓은 모두에게 열려있는 중고거래 플랫폼입니다.',sysdate);
+
+-- 로그아웃 :0 , 로그인 : 1
+create table login_check(
+member_number varchar2(100) primary key,
+status number default 0 constraint status_NN not null,
+id varchar2(100) not null unique
+);
+
+-- 비로그인 회원도 코멘트를 쓸 수 있게 한다
+create table coments (
+   id varchar2(50) default '비회원' constraint id_nn not null,
+   message varchar2(500) constraint message_nn not null,
+   regidate date default sysdate
+);
+
+--좋아요 , 구독을 누른 회원 체크
+create table cart (
+   likes number(1) default 0 not null,
+   interest number(1) default 0 not null,
+   likes_board_number varchar2(50) not null,
+   likes_member_number varchar2(50) not null
+);
+
+create table x_member as select member_number,id,pass,name,nickname,phone,address,grade,regidate from member where 1<>1
+;
+alter table x_member add (leave_date date default sysdate);
+
+--탈퇴시 탈퇴 테이블에 추가
+create or replace trigger add_x_member
+after delete on MEMBER
+for each row
+begin
+insert into x_member (member_number,id,pass,name,nickname,phone,address,grade,regidate,leave_date)
+values(:old.member_number,:old.id,:old.pass,:old.name,:old.nickname,:old.phone,:old.address,:old.grade,:old.regidate,sysdate);
+end;
+
+--회원가입시 user테이블 생성
+create or replace trigger add_user
+after insert on MEMBER
+for each row
+begin
+   insert into user_table (user_number) values(:new.member_number);
+end; 
+
+--회원가입시 login_check테이블 생성
+create or replace trigger login_check
+after insert on MEMBER
+for each row
+begin
+   insert into login_check (member_number,id) values(:new.member_number,:new.id);
+end; 
+
+update login_check set status=0;
