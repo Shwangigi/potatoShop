@@ -3,7 +3,7 @@ $(document).ready(function() {
     $("#searchBtn").on("click", function(event) {
         event.preventDefault(); // 폼 제출 방지
         var memberId = $("#searchInput").val();
-        console.log("검색 ID:", memberId); // 콘솔 로그 추가
+        console.log("Searching for member ID:", memberId); // 콘솔 로그 추가
 
         $.ajax({
             url: '/potato/admin/memberList',  // 서버로 요청 보낼 URL
@@ -20,16 +20,15 @@ $(document).ready(function() {
             }
         });
     }); // 회원 검색
-    });
     
      $(document).ready(function() {
             $("#modifyBtn").on("click", function() {
                 var memberId = $("#memberId").val();
                 var memberStatus = $("#memberStatus").val();
 
-                // AJAX 요청을 통해 회원등급을 블랙리스트로 수정
+                // AJAX 요청을 통해 회원 상태를 업데이트합니다.
                 $.ajax({
-                    url : "/blacklist",
+                    url : "/potato/admin/updateMemberStatus",
                     type : "POST",
                     data : {
                         id : memberId,
@@ -44,3 +43,4 @@ $(document).ready(function() {
                 });
             });
         }); // 회원정보 검색 후 정보수정
+   });

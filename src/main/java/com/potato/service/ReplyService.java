@@ -1,8 +1,5 @@
 package com.potato.service;
 
-import java.util.List;
-
-import com.potato.domain.Re_replyVO;
 import com.potato.domain.ReplyPageDTO;
 import com.potato.domain.ReplyVO;
 import com.potato.domain.Reply_critera;
@@ -17,8 +14,9 @@ public interface ReplyService {
 	
 	public int remove(String reply_number); // 댓글 1개 삭제
 
-	public ReplyPageDTO getListPage(Reply_critera reCritera, String id); // 댓글 갯수 구하기
+	public ReplyPageDTO getListPage(Reply_critera reCritera, String member_number); // 댓글 갯수 구하기
 
 	
 	
 }
+

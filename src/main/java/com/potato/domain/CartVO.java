@@ -5,7 +5,9 @@ import lombok.Data;
 @Data
 public class CartVO {
 	
-	private String types;
+	private int likes;
+	
+	private int interest;
 	
 	private String likes_board_number;
 	

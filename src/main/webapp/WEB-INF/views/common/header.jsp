@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"  %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html>
 <!-- Bootstrap CSS -->
@@ -12,7 +12,7 @@
 <link rel="stylesheet" type="text/css"
 	href="/resources/css/bootstrap.css" />
 <link href="/resources/css/style.css" rel="stylesheet" />
-<link href="/resources/css/register.css" rel="stylesheet" />
+<link href="/resources/css/header.css" rel="stylesheet" />
 <link rel="stylesheet" href="/resources/css/board.css">
 
 <!-- responsive style -->
@@ -29,10 +29,8 @@
 	src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-	
-<script src="/resources/js/board_register.js"></script>
-<!-- header.js참조 -->
-<script src="/resources/js/header.js"></script>
+
+
 <head>
 <!-- Basic -->
 <meta charset="utf-8" />
@@ -74,11 +72,25 @@
 <body>
 	<div class="hero_area">
 		<!-- header section strats -->
+		<div class="notification_bar" ></div>
 		<header class="header_section">
 			<nav class="navbar navbar-expand-lg custom_nav-container ">
-				<a class="navbar-brand" href="${pageContext.request.contextPath}/home"> <span> 🥔 감자마켓
-				</span>
+				<c:choose>
+				<c:when test="${sessionScope.member_number=='admin'}">
+				<a class="navbar-brand"
+					href="${pageContext.request.contextPath}/admin/home"> <div class="logo">
+    <img src="/resources/images/potato_logo.png" alt="감자 아이콘">
+  </div>
 				</a>
+				</c:when>
+				<c:otherwise>
+				<a class="navbar-brand"
+					href="${pageContext.request.contextPath}/home"> <div class="logo">
+    <img src="/resources/images/potato_logo.png" alt="감자 아이콘">
+  </div>
+				</a>
+				</c:otherwise>
+				</c:choose>
 				<button class="navbar-toggler" type="button" data-toggle="collapse"
 					data-target="#navbarSupportedContent"
 					aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -88,11 +100,22 @@
 
 				<div class="collapse navbar-collapse innerpage_navbar"
 					id="navbarSupportedContent">
-						<ul class="navbar-nav  ">
-						<li class="nav-item "><a class="nav-link" href="/home">홈
+					<ul class="navbar-nav  ">
+					<c:choose>
+				<c:when test="${sessionScope.member_number=='admin'}">
+				<li class="nav-item "><a class="nav-link" href="/admin/home">홈
 								<span class="sr-only">(current)</span>
 						</a></li>
-						<li class="nav-item active"><a class="nav-link"
+				</c:when>
+				<c:otherwise>
+				<li class="nav-item "><a class="nav-link" href="/home">홈
+								<span class="sr-only">(current)</span>
+						</a></li>
+				</c:otherwise>
+				</c:choose>
+						
+						
+						<li class="nav-item "><a class="nav-link"
 							href="/shop/list"> 중고거래 </a></li>
 					</ul>
 					<div class="user_option">
@@ -104,21 +127,72 @@
 							</c:when>
 							<c:otherwise>
 								<a
-									href="/potato/mypage?member_number=<c:out value='${sessionScope.member_number}'/>">
+									href="/potato/mypage">
 									<i class="fa fa-user" aria-hidden="true"></i> <span>${sessionScope.nickName}</span>
 								</a>
+								<a href="#" id="alarm_button"><svg xmlns="http://www.w3.org/2000/svg" width="16"
+										height="16" fill="currentColor" class="bi bi-bell"
+										viewBox="0 0 16 16">
+  								<path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6" />
+								</svg> 알림</a>
+								<div id="alarm_list" class="alarm_list" >
+									<div class="alarm_header">
+									  <strong>나의 알림</strong>
+									  	<div class="option">
+							
+									  	
+									<div class="alarm_container">
+									<ul>
+									<c:if test="${sessionScope.alarms==null||sessionScope.alarms==''}">
+									<span>알림이 없습니다.</span>
+									</c:if>
+									<c:forEach var="alarm" items="${sessionScope.alarms}">
+										<c:if test="${alarm.status==0}">
+										<li>
+										<a href="#" id="alarm_func" data-alarm-number="${alarm.alarm_number}" data-member-number="${alarm.member_number}" data-target-type="${alarm.target_type}" data-target-key="${alarm.target_key}" data-status="${alarm.status}">
+										<span style="color: red;">new </span><c:out value="${alarm.contents}"/>
+										</a>
+										<a href="#" id="alarm_del" role="button" class="bt_item _del" aria-pressed="false" data-alarm-number="${alarm.alarm_number}" data-member-number="${alarm.member_number}" data-target-type="${alarm.target_type}" data-target-key="${alarm.target_key}" data-status="${alarm.status}">
+										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+</svg></a>
+										</li>
+										</c:if>
+										<c:if test="${alarm.status==1}">
+										<li>
+										<div class=readed_alarm>
+										<a href="#" id="alarm_func" data-alarm-number="${alarm.alarm_number}" data-member-number="${alarm.member_number}" data-target-type="${alarm.target_type}" data-target-key="${alarm.target_key}" data-status="${alarm.status}">
+										<span style="color: gray;">[읽음] </span><c:out value="${alarm.contents}"/>
+										</a>
+										<a href="#" id="alarm_del" role="button" class="bt_item _del" aria-pressed="false" data-alarm-number="${alarm.alarm_number}" data-member-number="${alarm.member_number}" data-target-type="${alarm.target_type}" data-target-key="${alarm.target_key}" data-status="${alarm.status}">
+										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+</svg></a></div>
+										</li>
+										</c:if>
+									</c:forEach>
+									</ul>
+									<div class="notification-actions">
+    <a role="button" href="#" id="del_all" class="del_all" aria-pressed="false" data-member-number="${alarm.member_number}" >전체삭제</a>
+    <a href="#" id="hide">닫기</a>
+  </div>
+									</div>
+									</div>
+									</div>
+								</div>
+								<input type="hidden" id="session_number" value="${sessionScope.member_number}" />
 								<a href="#" id="logoutLink"> <i class="fa fa-sign-out"
 									aria-hidden="true"></i> <span>로그아웃</span>
 								</a>
-								<a
-									href="/potato/chat_list"><span>채팅목록</span>
-								</a>
-									
+								<a href="/potato/chat_list"><span>채팅목록</span> </a>
+								<a href="/potato/likes_list"><span>관심목록</span> </a>
+								<a href="/pay/pay_info"><span>감자페이</span> </a>
 							</c:otherwise>
 						</c:choose>
 					</div>
 				</div>
 			</nav>
+			<div class="notification_bar2" ></div>
 			<!-- 로그인 모달 -->
 			<div class="modal fade" id="loginModal" tabindex="-1" role="dialog"
 				aria-labelledby="loginModalLabel" aria-hidden="true">
@@ -146,6 +220,10 @@
 								<button type="button" class="btn btn-primary"
 									onclick="location.href='${pageContext.request.contextPath}/potato/register'">회원가입</button>
 							</form>
+							<div class="find-container">
+								<a href="/potato/find_id">아이디 찾기</a> | <a
+									href="/potato/find_pass">비밀번호 찾기</a>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -157,3 +235,6 @@
 
 	</div>
 	<!-- end hero area -->
+	
+	<!-- header.js참조 -->
+	<script src="/resources/js/header.js"></script>

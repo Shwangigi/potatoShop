@@ -2,10 +2,13 @@ package com.potato.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import com.potato.domain.BoardVO;
 import com.potato.domain.CartVO;
+import com.potato.domain.Criteria;
+import com.potato.domain.ImageSlideVO;
 import com.potato.mapper.BoardMapper;
 
 import lombok.AllArgsConstructor;
@@ -21,6 +24,12 @@ public class BoardServiceImpl implements BoardService{
 	@Override
 	public List<BoardVO> getList() {
 		return mapper.getList();
+	}
+	
+	@Override
+	public List<ImageSlideVO> getImage(String board_number) {
+		// TODO 게시물번호 이미지 가져오기
+		return mapper.getImage(board_number);
 	}
 
 	@Override
@@ -116,5 +125,74 @@ public class BoardServiceImpl implements BoardService{
 		return mapper.cancel_both(cart);
 	}
 
+	@Override
+	public int cancelViews(String board_number) {
+		// TODO Auto-generated method stub
+		return mapper.cancelViews(board_number);
+	}
+
+	@Override
+	public List<BoardVO> search(String title) {
+		return mapper.search(title);
+	}
+	
+	@Override
+	public List<BoardVO> search1(@Param("types") String types, @Param("title") String title) {
+		return mapper.search1(types, title);
+	}
+	
+	@Override
+	public void insertSearch(String title) {
+		// TODO 검색입력
+		mapper.insertSearch(title);
+	}
+	
+	@Override
+	public List<BoardVO> searchRank() {
+		// TODO 검색순위 가져오기
+		return mapper.searchRank();
+	}
+	
+	@Override
+	public int set_status(BoardVO board) {
+		// TODO 20.판매상태만 변경하기
+		return mapper.set_status(board);
+	}
+
+	@Override
+	public List<BoardVO> getMoreList(Criteria cri) {
+		// TODO 페이징처리
+		return mapper.getMoreList(cri);
+	}
+	
+	@Override
+	public List<BoardVO> getRecent(Criteria cri) {
+		// TODO 최근게시물
+		return mapper.getRecent(cri);
+	}
+
+	@Override
+	public int getTotal(Criteria cri) {
+		// TODO 총 게시물 갯수
+		return mapper.getTotalCount(cri);
+	}
+
+	@Override
+	public void image(ImageSlideVO image) {
+		// TODO 이미지 슬라이드용
+		mapper.image(image);
+	}
+
+	@Override
+	public BoardVO imageUtil(String photo_name) {
+		// TODO 이미지 테이블의 게시물번호 가져오기
+		return mapper.imageUtil(photo_name);
+	}
+
+	@Override
+	public boolean imageDelete(String board_number) {
+		// TODO 이미지 테이블 삭제하기
+		return mapper.imageDelete(board_number) == 1;
+	}
 
 }//class end
